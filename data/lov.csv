@@ -1,0 +1,54 @@
+Field,Value,Order
+Application Type,Bespoke,1
+Application Type,COTS,2
+Application Type,SaaS,3
+Application Type,Service,4
+Application Type,Open Source,5
+Lifecycle,Plan,1
+Lifecycle,Invest,2
+Lifecycle,Active,3
+Lifecycle,Migrating,4
+Lifecycle,Pending Decommission,5
+Lifecycle,Decommissioned,6
+Lifecycle,Retire,7
+Lifecycle,Sunset,8
+Lifecycle,Development,9
+Lifecycle,Implementing,10
+Lifecycle,Paused,11
+Roadmap,Invest,1
+Roadmap,Expand,2
+Roadmap,Modernise,3
+Roadmap,Consolidate,4
+Roadmap,Optimise,5
+Roadmap,Rollout,6
+Roadmap,Migrate,7
+Roadmap,Program,8
+Roadmap,Planned Replacement,9
+Hosting,SaaS,1
+Hosting,Cloud,2
+Hosting,AWS,3
+Hosting,Azure,4
+Hosting,OCI,5
+Hosting,On-Premise,6
+Hosting,Hybrid,7
+Hosting,Managed,8
+Region,Global,1
+Region,AU,2
+Region,US,3
+Region,NA,4
+Region,EU,5
+Region,NA/EU,6
+Region,APAC/NA,7
+Region,New Zealand,8
+Region,France,9
+Region,China,10
+Region,Italy,11
+Region,EMEIA,12
+Product Category,All,1
+Product Category,B2B,2
+Product Category,B2C,3
+Risk,Critical,1
+Risk,High,2
+Risk,Medium,3
+Risk,Low,4
+Risk,None,5

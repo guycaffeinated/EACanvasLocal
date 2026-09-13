@@ -1,0 +1,5 @@
+L1_ID,L1_Name,L1_Order,L1_Layout,L1_Description,L1_Owner
+BC1,Customer & Marketplace,1,row,"Customer identity, digital channels, discovery, customer care and marketplace seller experience.",VP Digital Experience
+BC2,Fulfillment & Logistics,2,row,"Inventory, fulfillment centers, transport, last-mile delivery and returns operations.",VP Fulfillment Technology
+BC3,Corporate Services,3,row,"Finance, procurement, workforce and enterprise risk/compliance functions.",CIO Corporate Platforms
+BC4,"Platform, Data & Security",4,row,"Integration, APIs, event streaming, data platforms, analytics and enterprise security foundations.",Chief Architect / CISO Delegate

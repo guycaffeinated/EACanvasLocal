@@ -1,0 +1,16 @@
+L1_ID,L2_ID,L2_Name,L2_Order,L2_Layout,L2_Description,L2_Owner
+BC1,BC1.1,Customer & Workforce Identity,1,grid,"Customer login, SSO, MFA, access governance for workforce and customers.","Director, IAM"
+BC1,BC1.2,Digital Storefront & Mobile,2,grid,"Web/mobile experiences, content, personalization surfaces and experimentation.","Director, Digital Channels"
+BC1,BC1.3,"Catalog, Search & Recommendations",3,grid,"Product information, taxonomy, pricing, search, discovery and recommendation services.",Head of Discovery
+BC1,BC1.4,Customer Service & Engagement,4,grid,"Customer support, messaging, CRM, loyalty/membership and contact center.","Director, Customer Operations"
+BC2,BC2.1,Inventory Planning & Replenishment,5,grid,"Forecasting, demand planning, inventory allocation, safety stock and replenishment.",Head of Supply Chain Systems
+BC2,BC2.2,Fulfillment Center Operations,6,grid,"WMS, labor management, robotics integration and execution within FCs.","Director, FC Systems"
+BC2,BC2.3,Transportation & Last Mile,7,grid,"Linehaul, carrier management, route optimization and last-mile delivery execution.","Director, Transportation Tech"
+BC2,BC2.4,Returns & Reverse Logistics,8,grid,"Returns authorization, processing, refurbishment, disposition and refunds.",Head of Reverse Logistics
+BC3,BC3.1,Finance & Accounting,9,grid,"GL, AP/AR, revenue recognition, tax, treasury and close management.","Controller, Finance Systems"
+BC3,BC3.2,Procurement & Vendor Management,10,grid,"Sourcing, contracts, supplier onboarding, P2P and spend analytics.","Director, Procurement Systems"
+BC3,BC3.3,HR & Workforce,11,grid,"Core HR, payroll integrations, recruiting, learning and workforce scheduling.",HRIS Product Owner
+BC3,BC3.4,"Risk, Compliance & Legal",12,grid,"GRC, privacy, audit, third-party risk and legal matter management.",Head of GRC
+BC4,BC4.1,Integration & API Platform,13,grid,"API gateway, iPaaS, event streaming and integration governance.",Enterprise Integration Lead
+BC4,BC4.2,Data Platform & Analytics,14,grid,"Data lake/warehouse, BI, ML platform, observability and data governance.",Head of Data Platforms
+BC4,BC4.3,AI Orchestration,,,,

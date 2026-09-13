@@ -1,0 +1,997 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EA Landscape Viewer — Guide</title>
+  <style>
+    :root {
+      --bg: #C7CACB;
+      --panel: #ffffff;
+      --line: #B1B5B7;
+      --text: #181919;
+      --muted: #4A5658;
+      --soft: #9CA1A3;
+      --accent: #D4A24C;
+      --accent-light: rgba(212, 162, 76, .12);
+      --accent-dark: #B8863A;
+      --dark: #181919;
+      --dark-2: #121313;
+      --dark-3: #292C2C;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --shadow: 0 1px 3px rgba(24, 25, 25, .08), 0 8px 24px rgba(24, 25, 25, .08);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      font-size: 15px;
+    }
+
+    img,
+    svg {
+      max-width: 100%;
+    }
+
+    a {
+      color: var(--accent-dark);
+    }
+
+    code,
+    .mono {
+      font-family: var(--mono);
+    }
+
+    code {
+      background: rgba(24, 25, 25, .07);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+
+    pre {
+      background: var(--dark);
+      color: #E9E9E9;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      overflow-x: auto;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      box-shadow: var(--shadow);
+    }
+
+    pre code {
+      background: none;
+      padding: 0;
+      color: inherit;
+    }
+
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 0 28px;
+    }
+
+    /* ── Hero ── */
+    .hero {
+      background: linear-gradient(180deg, #1D1F20 0%, var(--dark-2) 100%);
+      color: #fff;
+      padding: 56px 0 40px;
+      border-bottom: 4px solid var(--accent);
+    }
+
+    .hero .wrap {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .brand-mark {
+      width: 64px;
+      height: 64px;
+      flex: 0 0 auto;
+      border-radius: 14px;
+      background: var(--dark-3);
+      border: 1px solid rgba(255, 255, 255, .15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    .hero h1 {
+      margin: 0 0 6px;
+      font-size: 30px;
+      letter-spacing: -.3px;
+    }
+
+    .hero p.lede {
+      margin: 0;
+      color: rgba(255, 255, 255, .68);
+      font-size: 16px;
+      max-width: 620px;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .badge {
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: .2px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(212, 162, 76, .14);
+      border: 1px solid rgba(212, 162, 76, .35);
+      color: var(--accent);
+    }
+
+    /* ── Sticky contents bar ── */
+    .toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(24, 25, 25, .96);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid rgba(255, 255, 255, .1);
+    }
+
+    .toc .wrap {
+      display: flex;
+      gap: 4px;
+      overflow-x: auto;
+      padding-top: 10px;
+      padding-bottom: 10px;
+      scrollbar-width: thin;
+    }
+
+    .toc a {
+      white-space: nowrap;
+      color: rgba(255, 255, 255, .68);
+      text-decoration: none;
+      font-size: 12.5px;
+      font-weight: 600;
+      padding: 7px 12px;
+      border-radius: 999px;
+      transition: background 150ms, color 150ms;
+    }
+
+    .toc a:hover {
+      background: rgba(255, 255, 255, .08);
+      color: #fff;
+    }
+
+    /* ── Sections ── */
+    main {
+      padding: 8px 0 20px;
+    }
+
+    section {
+      padding: 52px 0;
+      border-bottom: 1px solid rgba(24, 25, 25, .08);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .8px;
+      color: var(--accent-dark);
+      background: var(--accent-light);
+      border: 1px solid rgba(212, 162, 76, .3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+
+    h2 {
+      font-size: 25px;
+      margin: 0 0 8px;
+      letter-spacing: -.2px;
+    }
+
+    h3 {
+      font-size: 16px;
+      margin: 0 0 8px;
+    }
+
+    .section-intro {
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 0 28px;
+      font-size: 15px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+      gap: 40px;
+      align-items: start;
+    }
+
+    @media (max-width: 800px) {
+      .two-col {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px 22px;
+    }
+
+    /* ── Philosophy pillars ── */
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .pillars {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .pillar {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .pillar .glyph {
+      font-size: 20px;
+      color: var(--accent-dark);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .pillar h3 {
+      font-size: 14.5px;
+    }
+
+    .pillar p {
+      margin: 0;
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+
+    /* ── Data flow diagram ── */
+    .flow {
+      background: var(--dark);
+      border-radius: var(--radius);
+      padding: 24px 18px;
+      box-shadow: var(--shadow);
+    }
+
+    .flow-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .flow-box {
+      flex: 1;
+      background: var(--dark-3);
+      border: 1px solid rgba(255, 255, 255, .12);
+      border-radius: var(--radius-sm);
+      padding: 10px 10px;
+      text-align: center;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .flow-box small {
+      display: block;
+      font-weight: 400;
+      color: rgba(255, 255, 255, .55);
+      margin-top: 2px;
+      font-size: 10.5px;
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .flow-caption {
+      text-align: center;
+      color: rgba(255, 255, 255, .5);
+      font-size: 11px;
+      margin-top: 14px;
+    }
+
+    /* ── Steps ── */
+    .steps {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 14px;
+    }
+
+    .step {
+      display: flex;
+      gap: 16px;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 16px 20px;
+    }
+
+    .step>div:last-child {
+      min-width: 0;
+    }
+
+    .step-num {
+      flex: 0 0 auto;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+    }
+
+    .step h3 {
+      margin: 2px 0 4px;
+    }
+
+    .step p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    /* ── Table ── */
+    .table-scroll {
+      overflow-x: auto;
+      overflow-y: hidden;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: var(--panel);
+      font-size: 13.5px;
+    }
+
+    table.data-table th,
+    table.data-table td {
+      text-align: left;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    table.data-table th {
+      background: var(--dark);
+      color: rgba(255, 255, 255, .8);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .5px;
+    }
+
+    table.data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    table.data-table td.file {
+      font-family: var(--mono);
+      font-weight: 700;
+      white-space: nowrap;
+      color: var(--accent-dark);
+    }
+
+    .callout {
+      background: var(--accent-light);
+      border: 1px solid rgba(212, 162, 76, .3);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      margin-top: 20px;
+      font-size: 13.5px;
+    }
+
+    .callout strong {
+      color: var(--accent-dark);
+    }
+
+    /* ── Feature grid ── */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .feature-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 600px) {
+      .feature-grid {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .feature {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+    }
+
+    .feature h3 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      border-bottom: 2px solid rgba(212, 162, 76, .25);
+      padding-bottom: 8px;
+      margin-bottom: 10px;
+    }
+
+    .feature ul {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .feature li {
+      margin-bottom: 4px;
+    }
+
+    /* ── Printing steps ── */
+    .print-steps {
+      list-style: none;
+      counter-reset: p;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .print-steps li {
+      counter-increment: p;
+      position: relative;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px 12px 46px;
+      font-size: 13.5px;
+      box-shadow: var(--shadow);
+    }
+
+    .print-steps li::before {
+      content: counter(p);
+      position: absolute;
+      left: 14px;
+      top: 12px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--dark);
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .print-steps b {
+      color: var(--text);
+    }
+
+    /* ── Tips ── */
+    .tips {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 10px;
+    }
+
+    .tip {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      box-shadow: var(--shadow);
+      font-size: 13.5px;
+    }
+
+    .tip b {
+      color: var(--text);
+    }
+
+    /* ── FAQ ── */
+    details {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      margin-bottom: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 700;
+      padding: 14px 18px;
+      list-style: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: '+';
+      color: var(--accent-dark);
+      font-size: 18px;
+      font-weight: 800;
+    }
+
+    details[open] summary::after {
+      content: '–';
+    }
+
+    details p {
+      margin: 0;
+      padding: 0 18px 16px;
+      color: var(--muted);
+      font-size: 13.5px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      background: var(--dark);
+      color: rgba(255, 255, 255, .55);
+      padding: 28px 0;
+      font-size: 12.5px;
+      text-align: center;
+    }
+
+    footer a {
+      color: var(--accent);
+    }
+  </style>
+</head>
+
+<body>
+
+  <header class="hero">
+    <div class="wrap">
+      <div class="brand-mark">EA</div>
+      <div>
+        <h1>EA Landscape Viewer — Guide</h1>
+        <p class="lede">A local-first enterprise architecture workbench for Enterprise Architects and Solution
+          Architects — no backend, no cloud account, no lock-in. Just your CSV files and a browser.</p>
+        <div class="badges">
+          <span class="badge">Zero backend</span>
+          <span class="badge">Your data never leaves your machine</span>
+          <span class="badge">Chrome &amp; Edge only</span>
+          <span class="badge">Plain CSV files</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <div class="wrap">
+      <a href="#philosophy">Philosophy</a>
+      <a href="#getting-started">Getting Started</a>
+      <a href="#csv-concept">Local CSV Data</a>
+      <a href="#features">Feature Tour</a>
+      <a href="#printing">Printing to PDF</a>
+      <a href="#tips">Tips for EAs/SAs</a>
+      <a href="#faq">FAQ</a>
+    </div>
+  </nav>
+
+  <main>
+
+    <section id="philosophy">
+      <div class="wrap">
+        <span class="eyebrow">Philosophy</span>
+        <h2>Why this tool exists</h2>
+        <p class="section-intro">Most EA tooling asks you to hand your organization's architecture data — systems,
+          costs, risk ratings, ownership — to someone else's server. This one doesn't. It's a design decision, not a
+          missing feature.</p>
+
+        <div class="two-col">
+          <div>
+            <p>The EA Landscape Viewer runs entirely in your browser. There's no database, no application server, no
+              account to create, and nothing is ever uploaded anywhere. The "backend" is a folder of plain CSV files
+              that you choose, sitting on your own disk or network share.</p>
+            <p>For architecture data specifically, that matters: capability maps, application inventories, cost and
+              risk data are often sensitive, sometimes governed by data-residency or confidentiality rules that make
+              "just upload it to a SaaS tool" a non-starter. A tool that structurally <em>cannot</em> exfiltrate your
+              data — because it has no server to send it to — sidesteps that conversation entirely.</p>
+            <p>It also means the data outlives the tool. Every CSV file this app reads and writes is a completely
+              ordinary CSV — open it in Excel, Numbers, Google Sheets, or a text editor any time, with or without
+              this viewer. If you stopped using this tool tomorrow, you'd lose nothing: your architecture data was
+              never inside a black box to begin with.</p>
+            <div class="pillars">
+              <div class="pillar">
+                <span class="glyph">◆</span>
+                <h3>Local-first</h3>
+                <p>Runs on your machine. Nothing is sent to a remote server, ever.</p>
+              </div>
+              <div class="pillar">
+                <span class="glyph">◆</span>
+                <h3>No lock-in</h3>
+                <p>Your data is CSV. Any spreadsheet tool can open it, with or without this app.</p>
+              </div>
+              <div class="pillar">
+                <span class="glyph">◆</span>
+                <h3>Version-friendly</h3>
+                <p>Put the folder in git and get a full history of your architecture, for free.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flow">
+            <div class="flow-row">
+              <div class="flow-box">Your CSV Folder<small>on disk, in git, on a share</small></div>
+            </div>
+            <div style="text-align:center;padding:8px 0"><span class="flow-arrow">⇅ read / write</span></div>
+            <div class="flow-row">
+              <div class="flow-box">Browser App<small>runs entirely client-side</small></div>
+            </div>
+            <div style="text-align:center;padding:8px 0"><span class="flow-arrow">↓ renders</span></div>
+            <div class="flow-row">
+              <div class="flow-box">Capability Map<small>Dashboard · Ledger</small></div>
+            </div>
+            <p class="flow-caption">Nothing above this diagram involves a network request. Ever.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="getting-started">
+      <div class="wrap">
+        <span class="eyebrow">Getting Started</span>
+        <h2>From zero to your first map</h2>
+        <p class="section-intro">No server, no install, no build step. The most common way to run this is simply
+          double-clicking the file — which is also the only option that works on many locked-down corporate laptops.
+        </p>
+
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div>
+              <h3>Use Chrome or Edge</h3>
+              <p>The app relies on the <strong>File System Access API</strong> to read and write your CSV folder
+                directly. Firefox and Safari don't implement it yet, so the folder-open step won't work there.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div>
+              <h3>Double-click <code>index.html</code></h3>
+              <p>That's it — Chrome and Edge treat local files as a secure context, so the whole folder read/write
+                pipeline works straight off disk. No terminal, no commands, nothing to install. This is the primary
+                way to run the app.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div>
+              <h3>(Optional) Serve it over HTTP instead</h3>
+              <p>If you'd simply rather, or your setup calls for it, a one-line local file host works too — this is
+                <em>not</em> a real backend, just a static file host, and needs no dependencies:</p>
+              <pre><code>python3 serve.py
+# or, if that path doesn't suit your machine:
+python3 -m http.server 8080</code></pre>
+              <p>then visit <code>http://localhost:8080</code>.</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div>
+              <h3>Click "Open Data Folder"</h3>
+              <p>Pick any folder containing the CSV files described below — start with the bundled <code>data/</code>
+                sample folder to explore before pointing it at your own architecture data.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="csv-concept">
+      <div class="wrap">
+        <span class="eyebrow">The Data Model</span>
+        <h2>Everything is a CSV file</h2>
+        <p class="section-intro">There is no hidden database. Every list, every attribute, every mapping you see in
+          the app is read live from — and written straight back to — one of these files, in the folder you selected.
+        </p>
+
+        <div class="table-scroll">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Holds</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="file">capabilities_l1.csv</td>
+              <td>Top-level capability groups (e.g. "Customer &amp; Marketplace") — name, order, layout, description,
+                owner.</td>
+            </tr>
+            <tr>
+              <td class="file">capabilities_l2.csv</td>
+              <td>Sub-capabilities nested under each L1 group, same shape of fields.</td>
+            </tr>
+            <tr>
+              <td class="file">applications.csv</td>
+              <td>Your application inventory — ID, name, type, lifecycle, hosting, cost, risk, owner, and any custom
+                columns you add.</td>
+            </tr>
+            <tr>
+              <td class="file">app_capability_map.csv</td>
+              <td>The many-to-many links between applications and the L2 capabilities they support.</td>
+            </tr>
+            <tr>
+              <td class="file">heading.csv / canvas_heading.csv</td>
+              <td>The title, description, and company name shown in the header and on the printed map.</td>
+            </tr>
+            <tr>
+              <td class="file">lov.csv</td>
+              <td>Your team's standard vocabulary — the allowed values for fields like Lifecycle, Risk, and
+                Application Type in the Add/Edit dropdowns.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <div class="callout">
+          <strong>Why this matters for EAs:</strong> a capability map is a living artifact, not a snapshot. Because
+          it's plain CSV, you can commit the folder to git and get a genuine audit trail of how your landscape
+          evolved — who added what application, when a capability was renamed, when an app was marked for
+          decommission — using tools you probably already have, with zero extra tooling.
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <div class="wrap">
+        <span class="eyebrow">Feature Tour</span>
+        <h2>What you can do in the app</h2>
+        <p class="section-intro">Every feature below works the moment you open a data folder — nothing needs to be
+          configured beforehand.</p>
+
+        <div class="feature-grid">
+          <div class="feature">
+            <h3>Capability Map</h3>
+            <ul>
+              <li>Grid, Horizontal, Vertical, or Custom (CSV-driven) layouts</li>
+              <li>Expanded, Compact, or Heatmap density</li>
+              <li>Collapsible L1 blocks, adjustable block width</li>
+              <li>App chips colorized by up to 3 attributes at once</li>
+              <li>Linked "supersedes" chips between replaced/replacing apps</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Executive Dashboard</h3>
+            <ul>
+              <li>Portfolio-level stats and bar charts</li>
+              <li>Top-app and risk-indicator lists</li>
+              <li>Warning cards for critical capability gaps</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Ledger (Inventory Table)</h3>
+            <ul>
+              <li>Sortable, filterable table of every application</li>
+              <li>Resolved L1/L2 capability columns, currency-formatted cost</li>
+              <li>Click a row to open its full detail panel</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Search &amp; Filtering</h3>
+            <ul>
+              <li>Global real-time search across apps and capabilities</li>
+              <li>Multi-select filters, combined across attributes</li>
+              <li>Click any capability in the tree to scope the view</li>
+              <li>Filter state carries across views</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Color Coding</h3>
+            <ul>
+              <li>Up to 3 attributes color-coded simultaneously</li>
+              <li>Literal (exact match) or numeric-range gradient rules</li>
+              <li>Configured once for the whole team in <code>color-config.js</code></li>
+              <li>Dynamic legend, hash-based fallback for unmapped values</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Zoom, Pan &amp; Minimap</h3>
+            <ul>
+              <li>Zoom 25%–300%, fit-to-screen, reset</li>
+              <li>Click-and-drag panning</li>
+              <li>Collapsible minimap with a draggable viewport indicator</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Data Entry &amp; Editing</h3>
+            <ul>
+              <li>Add/Edit/Delete applications and capabilities</li>
+              <li>Inline editing directly in the detail panel</li>
+              <li>Standardized dropdowns from <code>lov.csv</code>, with an "Other…" escape hatch</li>
+              <li>"Manage Mappings" to assign apps to capabilities</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Sidebars</h3>
+            <ul>
+              <li>Left: search, filters, capability tree</li>
+              <li>Right: full detail panel for the selected item</li>
+              <li>Both collapsible; state remembered between visits</li>
+            </ul>
+          </div>
+          <div class="feature">
+            <h3>Focus Mode &amp; Auto-Refresh</h3>
+            <ul>
+              <li>Focus Mode hides both sidebars for presenting the map</li>
+              <li>"Auto" watches your CSV folder and reloads when files change externally</li>
+              <li>Manual "Reload" button always available</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="printing">
+      <div class="wrap">
+        <span class="eyebrow">Printing</span>
+        <h2>Getting the whole map onto one landscape PDF</h2>
+        <p class="section-intro">The app's print styles are built for a large single page — <code>A2
+            landscape</code> — but the final page size and scale are controlled by your browser's Print dialog, not
+          by the app. This is the single most common point of confusion, so here's the exact sequence.</p>
+
+        <ol class="print-steps">
+          <li><b>Click Print</b> in the toolbar (or <code>Cmd/Ctrl + P</code>). All UI chrome — header, sidebars,
+            controls — is automatically hidden; only the map itself is printed.</li>
+          <li><b>Set Destination</b> to "Save as PDF".</li>
+          <li><b>Set Paper size</b> to <code>A2</code> if your browser offers it. If not, choose "Manage custom
+            sizes…" (Chrome) and enter a large landscape size — the app is designed around A2 (420 × 594&nbsp;mm),
+            but any large custom size works the same way.</li>
+          <li><b>Set Margins</b> to "None" or "Minimum" to reclaim edge space.</li>
+          <li><b>Open "More settings"</b> and set <b>Scale</b> — try "Fit to page" first. If the map still spans more
+            than one page, switch to a manual scale and reduce it a few percent at a time until it fits.</li>
+          <li><b>Turn off "Headers and footers"</b> — this removes the browser's own date/URL print header, which
+            otherwise eats into your margin.</li>
+          <li><b>Save.</b> You now have the entire capability map as a single-page landscape PDF.</li>
+        </ol>
+
+        <div class="callout">
+          <strong>Still spanning multiple pages?</strong> Reduce the amount of content the browser has to fit
+          <em>before</em> you print: zoom out in the app (lower the % or hit "Fit to screen"), or switch Density to
+          "Compact" to shrink every block. A smaller canvas at print time means less scaling is needed to land on one
+          page.
+        </div>
+      </div>
+    </section>
+
+    <section id="tips">
+      <div class="wrap">
+        <span class="eyebrow">Best Practices</span>
+        <h2>Tips for EAs and Solution Architects</h2>
+        <p class="section-intro">A few patterns that make this tool much more useful for governance and
+          team-wide consistency.</p>
+
+        <div class="tips">
+          <div class="tip"><b>Version your CSV folder in git.</b> You get a real, diffable history of your
+            architecture's evolution — who changed what, and when — without any extra tooling.</div>
+          <div class="tip"><b>Standardize <code>lov.csv</code> once, for the whole team.</b> It controls the
+            dropdown options for Application Type, Lifecycle, Risk, Hosting, Region, and Product Category — a shared
+            copy keeps everyone's data consistent, while "Other…" still allows justified exceptions.</div>
+          <div class="tip"><b>Tune <code>color-config.js</code> to your organization's palette</b> (e.g. red/amber/green
+            by Risk, or a gradient by cost) once, and every user who opens the same folder sees the same visual
+            language.</div>
+          <div class="tip"><b>Use the <code>Superseder</code> field</b> on <code>applications.csv</code> to model
+            decommission and replacement chains — the map renders a linked chip straight to the app that replaces
+            it.</div>
+          <div class="tip"><b>Combine multi-select filters</b> to build governance views on demand — e.g. every
+            application that is both <code>Risk: Critical</code> and <code>Lifecycle: Retire</code>, instantly.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="faq">
+      <div class="wrap">
+        <span class="eyebrow">FAQ</span>
+        <h2>Troubleshooting</h2>
+
+        <details>
+          <summary>"Open Data Folder" doesn't do anything</summary>
+          <p>Confirm you're using Chrome or Edge — Firefox and Safari don't implement the File System Access API the
+            whole data pipeline depends on, whether the page is opened via double-click or a local server.</p>
+        </details>
+        <details>
+          <summary>My edits don't seem to save</summary>
+          <p>Check for a browser permission prompt asking to confirm read/write access to the folder — it can appear
+            behind the window. Also make sure the CSV file isn't open and locked in another program (e.g. Excel) at
+            the same time.</p>
+        </details>
+        <details>
+          <summary>My printed PDF came out as several pages</summary>
+          <p>See the <a href="#printing">Printing to PDF</a> section above — this is almost always the browser
+            Print dialog's Paper size/Scale settings, not the app.</p>
+        </details>
+        <details>
+          <summary>Do I need to sign up for anything?</summary>
+          <p>No. There's no account, no cloud service, and no data ever leaves your machine. The only requirement is
+            Chrome or Edge — see <a href="#getting-started">Getting Started</a>.</p>
+        </details>
+        <details>
+          <summary>Can I use my own CSV columns?</summary>
+          <p>Yes — any additional column you add to <code>applications.csv</code> is automatically detected and
+            becomes available as a filter and a color-coding attribute, no configuration required.</p>
+        </details>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    EA Landscape Viewer — a local-first, open, CSV-backed architecture workbench. See
+    <a href="README.md">README.md</a> for setup and <a href="CLAUDE.md">CLAUDE.md</a> for full technical
+    documentation.
+  </footer>
+
+</body>
+
+</html>

@@ -1,0 +1,398 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'none'; base-uri 'self';" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EA Landscape Viewer</title>
+  <link rel="stylesheet" href="libs/pikaday.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+
+<body class="view-map">
+
+  <header class="topbar">
+    <div class="topbar-main">
+      <div class="brand">
+        <div class="brand-mark">EA</div>
+        <div>
+          <div id="headerCompany" class="brand-company"></div>
+          <div id="headerTitle" class="brand-title">Enterprise Architecture Landscape</div>
+          <div id="headerDesc" class="brand-subtitle">Capability Map View</div>
+        </div>
+      </div>
+
+      <div class="data-status">
+        <span id="fileIndicator" class="file-indicator"></span>
+        <span id="dataVersion" class="data-version" aria-live="polite"></span>
+      </div>
+
+      <nav class="main-nav" aria-label="Primary navigation">
+        <!-- Visualisation (with dropdown sub-menu) -->
+        <div class="vis-menu-wrap">
+          <button class="main-nav-item active" data-section="visualisation" data-subtitle="Landscape &amp; visual views"
+            aria-haspopup="true" aria-expanded="false" aria-controls="visSubMenu">
+            <span class="nav-label">Capability Map</span>
+            <span class="nav-caret" aria-hidden="true">&#9662;</span>
+          </button>
+          <div id="visSubMenu" class="sub-dropdown hidden" role="menu">
+            <p class="sub-dropdown-title">Atlas</p>
+            <button class="sub-menu-item is-active" type="button" role="menuitem"
+              data-route="visualisation/capability-map">
+              <span class="sub-menu-label">Capability Map</span>
+              <span class="sub-menu-desc">Detailed capability hierarchy</span>
+            </button>
+            <button class="sub-menu-item" type="button" role="menuitem" data-route="visualisation/dashboards">
+              <span class="sub-menu-label">Executive Dashboards</span>
+              <span class="sub-menu-desc">High-level KPIs and summaries</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="nav-dropdown-wrap">
+          <button class="main-nav-item" data-section="inventory" data-subtitle="Authoritative system inventory"
+            aria-haspopup="true" aria-expanded="false" aria-controls="ledgerSubMenu">
+            <span class="nav-label">Ledger</span>
+            <span class="nav-caret" aria-hidden="true">&#9662;</span>
+          </button>
+          <div id="ledgerSubMenu" class="sub-dropdown hidden" role="menu">
+            <p class="sub-dropdown-title">Ledger</p>
+            <button class="sub-menu-item" type="button" role="menuitem" data-route="inventory/applications">
+              <span class="sub-menu-label">Applications</span>
+              <span class="sub-menu-desc">Full application inventory</span>
+            </button>
+          </div>
+        </div>
+        <a class="btn btn-sm" href="GUIDE.html" target="_blank" rel="noopener" title="Open the user guide">Help</a>
+
+        <label class="file-btn primary-btn" id="openFolderBtnWrap" style="display: none;">
+          <button id="openFolderBtn" class="visually-hidden"></button>
+          <span id="openFolderText">Open Data Folder</span>
+        </label>
+        
+        <div id="csvToolbar" class="csv-toolbar hidden">
+          <button id="addEntityBtn" class="btn btn-sm" title="Add new item">+ Add</button>
+          <button id="refreshDataBtn" class="btn btn-sm" title="Refresh from disk">&#x21bb; Reload</button>
+          <label class="auto-refresh-lbl" data-subtitle="Reloads when CSVs change outside the app"><input type="checkbox" id="autoRefreshCb"> Auto</label>
+        </div>
+
+      </nav>
+
+      <!-- Hidden select kept for app.js backward compat -->
+      <select id="viewMode" class="visually-hidden" aria-hidden="true" tabindex="-1">
+        <option value="map" selected>Capability Map</option>
+        <option value="dashboard">Dashboard</option>
+      </select>
+    </div>
+
+    <div class="topbar-row controls-row">
+      <div class="controls">
+        <div class="ctrl attr-ctrl">
+          <label for="colorBy1">Attribute 1</label>
+          <select id="colorBy1"></select>
+        </div>
+        <div class="ctrl attr-ctrl">
+          <label for="colorBy2">Attribute 2</label>
+          <select id="colorBy2"></select>
+        </div>
+        <div class="ctrl attr-ctrl">
+          <label for="colorBy3">Attribute 3</label>
+          <select id="colorBy3"></select>
+        </div>
+
+        <div class="ctrl map-only">
+          <label for="mapLayout">Layout</label>
+          <select id="mapLayout">
+            <option value="grid" selected>Grid</option>
+            <option value="horizontal">Horizontal</option>
+            <option value="vertical">Vertical</option>
+            <option value="custom">Custom (Data)</option>
+          </select>
+        </div>
+
+        <div class="ctrl map-only">
+          <label for="density">Density</label>
+          <select id="density">
+            <option value="expanded">Expanded</option>
+            <option value="compact" selected>Compact</option>
+            <option value="heatmap">Heatmap</option>
+          </select>
+        </div>
+
+        <div class="ctrl map-only">
+          <label for="blockWidth">Block Width</label>
+          <select id="blockWidth">
+            <option value="360">Narrow</option>
+            <option value="480" selected>Standard</option>
+            <option value="600">Wide</option>
+          </select>
+        </div>
+
+        <div class="zoom-controls map-only">
+          <button id="zoomOutBtn" class="zoom-btn" title="Zoom Out">-</button>
+          <button id="zoomResetBtn" class="zoom-btn zoom-reset"><span id="zoomLevel">100%</span></button>
+          <button id="zoomInBtn" class="zoom-btn" title="Zoom In">+</button>
+          <button id="fitScreenBtn" class="zoom-btn" title="Fit to Screen">&#8862;</button>
+        </div>
+
+        <div class="ctrl-group map-only">
+          <button id="collapseAllBtn" class="btn-sm" title="Collapse All L1 Blocks">&#9660; All</button>
+          <button id="expandAllBtn" class="btn-sm" title="Expand All L1 Blocks">&#9650; All</button>
+        </div>
+
+        <button id="focusModeBtn" class="btn btn-focus" title="Focus Mode">
+          <span class="focus-text">Focus</span>
+        </button>
+        <button id="printBtn" class="btn">Print</button>
+        <button id="resetBtn" class="btn">Reset</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar left">
+      <div class="panel-header">
+        <span class="panel-title">Navigate</span>
+        <button id="navToggle" class="panel-toggle" title="Toggle panel">&#10094;</button>
+      </div>
+      <div class="panel-body">
+        <div class="search-bar">
+          <input id="searchInput" type="search" placeholder="Search capabilities or apps..." />
+          <span id="searchCount" class="search-count"></span>
+          <button id="clearSearchBtn" class="btn-icon" title="Clear">&#10005;</button>
+        </div>
+
+        <details class="filter-section" open>
+          <summary class="filter-summary">Filters</summary>
+          <div id="filterContainer" class="filter-container"></div>
+        </details>
+
+        <div class="tree-section">
+          <div class="tree-header">Capabilities</div>
+          <div id="capTree" class="cap-tree empty">Open a Data Folder to begin.</div>
+        </div>
+      </div>
+    </aside>
+
+    <section class="content">
+      <div id="emptyState" class="empty-state">
+        <div class="empty-card">
+          <h2>Ready to Start</h2>
+          <p>Click <strong>Open Data Folder</strong> to load your EA landscape CSV data.</p>
+          <p class="empty-hint">Required CSVs: capabilities_l1, capabilities_l2, applications, app_capability_map</p>
+        </div>
+      </div>
+
+      <div id="mapView" class="view hidden">
+        <div class="view-header">
+          <div class="map-heading">
+            <div id="mapHeaderCompany" class="map-company"></div>
+            <div id="mapHeaderTitle" class="map-title">Capability Map</div>
+            <div id="mapHeaderDesc" class="map-desc"></div>
+          </div>
+          <div class="legend-wrap">
+            <div id="legendTitle" class="legend-title">Legend</div>
+            <div id="legendItems" class="legend-items">
+              <span class="legend-empty">Load data to show legend.</span>
+            </div>
+          </div>
+        </div>
+        <div id="mapCanvasViewport" class="map-canvas-viewport">
+          <div id="mapCanvas" class="map-canvas layout-grid"></div>
+        </div>
+      </div>
+
+      <div id="dashboardView" class="view hidden">
+        <div class="view-header">
+          <div class="view-title">Dashboard Overview</div>
+        </div>
+        <div id="dashboardCanvas" class="dash-canvas"></div>
+      </div>
+
+      <div id="inventoryView" class="view hidden"></div>
+
+      <div id="comingSoonPage" class="view hidden"></div>
+    </section>
+
+    <aside class="sidebar right">
+      <div class="panel-header">
+        <span class="panel-title">Details</span>
+        <button id="detailsToggle" class="panel-toggle" title="Toggle panel">&#10095;</button>
+      </div>
+      <div id="detailsPanel" class="details empty">
+        <div class="detail-empty-msg">Select an app or capability to see details.</div>
+      </div>
+      <div id="minimapContainer" class="minimap-container">
+        <div class="minimap-header">
+          <span class="minimap-label">Overview</span>
+          <button id="minimapToggleBtn" class="minimap-toggle" title="Toggle minimap">&#9660;</button>
+        </div>
+        <div id="minimapCanvas" class="minimap-canvas"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <span id="statusText">Ready.</span>
+  </footer>
+
+  <!-- MODALS -->
+  <!-- Add Entity Modal -->
+  <div id="addEntityModal" class="ea-modal hidden">
+    <div class="ea-modal-content">
+      <div class="ea-modal-header">
+        <h3 id="addEntityTitle">Add New Entity</h3>
+        <button class="ea-modal-close" data-modal="addEntityModal">&times;</button>
+      </div>
+      <div class="ea-modal-body">
+        <label class="ea-form-label">Type</label>
+        <select id="addEntityType" class="ea-form-select">
+          <option value="app">Application</option>
+          <option value="l1">L1 Business Capability</option>
+          <option value="l2">L2 Business Capability</option>
+        </select>
+        
+        <label class="ea-form-label">ID (Short, unique, no spaces)</label>
+        <input type="text" id="addEntityId" class="ea-form-input" placeholder="e.g. app-new-hr" />
+        
+        <label class="ea-form-label">Name</label>
+        <input type="text" id="addEntityName" class="ea-form-input" placeholder="e.g. New HR System" />
+        
+        <div id="addEntityL1Wrap" class="hidden">
+           <label class="ea-form-label">Parent L1 Capability</label>
+           <select id="addEntityParentL1" class="ea-form-select"></select>
+        </div>
+
+        <div id="addEntityAppFieldsWrap" class="hidden">
+          <label class="ea-form-label">Application Type</label>
+          <select id="addEntityAppType" class="ea-form-select" title="Application Type"></select>
+          <input type="text" id="addEntityAppTypeOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Application Type" />
+
+          <label class="ea-form-label">Lifecycle</label>
+          <select id="addEntityLifecycle" class="ea-form-select" title="Lifecycle"></select>
+          <input type="text" id="addEntityLifecycleOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Lifecycle" />
+
+          <label class="ea-form-label">Risk</label>
+          <select id="addEntityRisk" class="ea-form-select" title="Risk"></select>
+          <input type="text" id="addEntityRiskOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Risk" />
+
+          <label class="ea-form-label">Roadmap</label>
+          <select id="addEntityRoadmap" class="ea-form-select" title="Roadmap"></select>
+          <input type="text" id="addEntityRoadmapOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Roadmap" />
+
+          <label class="ea-form-label">Hosting</label>
+          <select id="addEntityHosting" class="ea-form-select" title="Hosting"></select>
+          <input type="text" id="addEntityHostingOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Hosting" />
+
+          <label class="ea-form-label">Region</label>
+          <select id="addEntityRegion" class="ea-form-select" title="Region"></select>
+          <input type="text" id="addEntityRegionOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Region" />
+
+          <label class="ea-form-label">Product Category</label>
+          <select id="addEntityProductCategory" class="ea-form-select" title="Product Category"></select>
+          <input type="text" id="addEntityProductCategoryOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Product Category" />
+        </div>
+      </div>
+      <div class="ea-modal-footer">
+        <button class="btn btn-sec ea-modal-cancel" data-modal="addEntityModal">Cancel</button>
+        <button class="btn btn-pri" id="addEntitySaveBtn">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Manage Mappings Modal -->
+  <div id="manageMappingsModal" class="ea-modal hidden">
+    <div class="ea-modal-content">
+      <div class="ea-modal-header">
+        <h3 id="manageMappingsTitle">Manage Mappings</h3>
+        <button class="ea-modal-close" data-modal="manageMappingsModal">&times;</button>
+      </div>
+      <div class="ea-modal-body">
+        <p class="ea-modal-desc" id="manageMappingsDesc"></p>
+        <input type="text" id="manageMappingsSearch" class="ea-form-input" placeholder="Filter capabilities..." style="margin-bottom: 10px;" />
+        <div id="manageMappingsList" class="ea-mappings-list"></div>
+      </div>
+      <div class="ea-modal-footer">
+        <button class="btn btn-sec ea-modal-cancel" data-modal="manageMappingsModal">Cancel</button>
+        <button class="btn btn-pri" id="manageMappingsSaveBtn">Update Mappings</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit App Modal -->
+  <div id="editAppModal" class="ea-modal hidden">
+    <div class="ea-modal-content">
+      <div class="ea-modal-header">
+        <h3 id="editAppTitle">Edit Application</h3>
+        <button class="ea-modal-close" data-modal="editAppModal">&times;</button>
+      </div>
+      <div class="ea-modal-body">
+        <label class="ea-form-label">Application Name</label>
+        <input type="text" id="editAppName" class="ea-form-input" placeholder="Application Name" />
+        
+        <label class="ea-form-label">Application Type</label>
+        <select id="editAppType" class="ea-form-select" title="Application Type"></select>
+        <input type="text" id="editAppTypeOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Application Type" />
+
+        <label class="ea-form-label">Lifecycle</label>
+        <select id="editAppLifecycle" class="ea-form-select" title="Lifecycle"></select>
+        <input type="text" id="editAppLifecycleOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Lifecycle" />
+
+        <label class="ea-form-label">Risk</label>
+        <select id="editAppRisk" class="ea-form-select" title="Risk"></select>
+        <input type="text" id="editAppRiskOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Risk" />
+
+        <label class="ea-form-label">Roadmap</label>
+        <select id="editAppRoadmap" class="ea-form-select" title="Roadmap"></select>
+        <input type="text" id="editAppRoadmapOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Roadmap" />
+
+        <label class="ea-form-label">Annual Cost</label>
+        <input type="text" id="editAppCost" class="ea-form-input" placeholder="Annual Cost" />
+
+        <label class="ea-form-label">Currency</label>
+        <input type="text" id="editAppCurrency" class="ea-form-input" placeholder="Currency" />
+
+        <label class="ea-form-label">Owner</label>
+        <input type="text" id="editAppOwner" class="ea-form-input" placeholder="Owner" />
+
+        <label class="ea-form-label">Hosting</label>
+        <select id="editAppHosting" class="ea-form-select" title="Hosting"></select>
+        <input type="text" id="editAppHostingOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Hosting" />
+
+        <label class="ea-form-label">Region</label>
+        <select id="editAppRegion" class="ea-form-select" title="Region"></select>
+        <input type="text" id="editAppRegionOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Region" />
+
+        <label class="ea-form-label">Product Category</label>
+        <select id="editAppProductCategory" class="ea-form-select" title="Product Category"></select>
+        <input type="text" id="editAppProductCategoryOther" class="ea-form-input lov-other-input hidden" placeholder="Enter Product Category" />
+
+        <label class="ea-form-label">Comments</label>
+        <textarea id="editAppComments" class="ea-form-input" placeholder="Comments" rows="3"></textarea>
+
+        <label class="ea-form-label">End Date</label>
+        <input type="text" id="editAppEndDate" class="ea-form-input" placeholder="dd/mm/yyyy" autocomplete="off" />
+      </div>
+      <div class="ea-modal-footer">
+        <button class="btn btn-sec ea-modal-cancel" data-modal="editAppModal">Cancel</button>
+        <button class="btn btn-pri" id="editAppSaveBtn">Save Changes</button>
+      </div>
+    </div>
+  </div>
+
+
+
+  <script src="libs/pikaday.js"></script>
+  <script src="./color-config.js"></script>
+  <script src="./assets/csv-store.js"></script>
+  <script src="./assets/lov.js"></script>
+  <script src="./assets/app.js"></script>
+  <script src="./assets/router.js"></script>
+  <script src="./assets/nav.js"></script>
+  <script src="./assets/inventory-table.js"></script>
+  <script src="./assets/edit-app.js"></script>
+</body>
+
+</html>
